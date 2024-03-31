@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% include "partials/_navbar.html" %}
+
+{% block content %}
+{% comment %} yorum girme kısmı {% endcomment %}
+  <div class="container">
+    <form class="text-center" method="POST" novalidate>
+      {% csrf_token %}
+    <div class="row">
+      <div class="col-6">
+        <label>{{form.full_name.label}}</label>
+        {{form.full_name}}
+      </div>
+
+      <div class="col-6">
+        <label>{{form.mail.label}}</label>
+        {{form.mail}}
+      </div>
+
+      <div class="col-12">
+        <label>{{form.text}}</label>
+        {{form.media}}
+        <input type="submit" value="GÖNDER" class="btn btn-primary rounded">
+      </div>
+    </div>
+  </form>
+  </div>
+
+{% comment %} yorum display kısmı {% endcomment %}
+  <div class="container">
+    {% for c in comment %}
+    <div class="row">
+      <div class="col-12">
+        <h3>{{c.full_name|safe}}</h3>
+        <p>{{c.text|safe}}</p>
+        <p>{{c.date}}</p>
+        {% if c.user == request.user %}
+        <form method="POST" action="{% url 'sil' %}">
+          {% csrf_token %}
+          <input type="text" value="{{c.id}}" name="sil" hidden>
+        <button type="submit" class="btn btn-danger">Sil</button>
+        </form>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+{% endblock content %}
